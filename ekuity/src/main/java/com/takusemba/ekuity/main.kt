@@ -5,7 +5,6 @@ import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.options.required
 import com.github.ajalt.clikt.parameters.options.split
-import com.github.ajalt.clikt.parameters.options.validate
 import com.github.ajalt.clikt.parameters.options.versionOption
 import com.github.ajalt.clikt.parameters.types.int
 import com.takusemba.ekuity.Result.WIN
@@ -16,24 +15,15 @@ class Ekuity : CliktCommand() {
     versionOption("1.0.0")
   }
 
-  val player: List<String> by option("-p", "--player", "--players", help = "Sets players' cards")
+  val players: List<String> by option("-p", "--player", "--players", help = "Sets players' cards")
     .split(Regex(","))
     .required()
-    .validate {
-      // TODO
-    }
 
   val board: String by option("-b", "--board", help = "Sets board's cards")
     .required()
-    .validate {
-      // TODO
-    }
 
   val exposed: List<String>? by option("-e", "--exposed", help = "Sets exposed cards")
     .split(Regex(","))
-    .validate {
-      // TODO
-    }
 
   val iterator: Int by option("-i", "--iterations", help = "Sets iteration count")
     .int()
@@ -42,7 +32,7 @@ class Ekuity : CliktCommand() {
   override fun run() {
     val deck = Deck()
 
-    val playerCards = player.map { Pair(Card.of(it.substring(0, 2)), Card.of(it.substring(2, 4))) }
+    val playerCards = players.map { Pair(Card.of(it.substring(0, 2)), Card.of(it.substring(2, 4))) }
     val players = playerCards.map { Player(it.first, it.second) }
 
     val boardCards = board.windowed(size = 2, step = 2).map { Card.of(it) }.toTypedArray()
