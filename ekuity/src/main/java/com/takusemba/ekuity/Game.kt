@@ -30,13 +30,13 @@ class Game(private val deck: Deck, private val players: List<Player>, private va
       map[hand] = players
     }
 
-    val sorted = map.toSortedMap(Comparator { a, b -> b.compareTo(a) })
-    val players = checkNotNull(sorted[sorted.firstKey()])
+    val ranking = map.toSortedMap(Comparator { a, b -> b.compareTo(a) })
+    val players = checkNotNull(ranking[ranking.firstKey()])
 
     return if (players.size >= 2) {
-      Tie(sorted.firstKey())
+      Tie(ranking.firstKey())
     } else {
-      Settlement(players.first(), sorted.firstKey())
+      Settlement(players.first(), ranking.firstKey())
     }
   }
 }
