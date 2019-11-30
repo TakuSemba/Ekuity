@@ -81,14 +81,15 @@ class Judgement(private val cards: List<Card>) {
     if (maxSameSuit.value.size >= 5) {
       for (card in maxSameSuit.value) {
         val index = maxSameSuit.value.indexOf(card)
-        if (cards.size - index >= 5) {
+        if (maxSameSuit.value.size - index >= 5) {
           if (
-            cards[index].rank.ordinal - 1 == cards[index + 1].rank.ordinal &&
-            cards[index + 1].rank.ordinal - 1 == cards[index + 2].rank.ordinal &&
-            cards[index + 2].rank.ordinal - 1 == cards[index + 3].rank.ordinal &&
-            cards[index + 3].rank.ordinal - 1 == cards[index + 4].rank.ordinal
+            maxSameSuit.value[index].rank.ordinal - 1 == maxSameSuit.value[index + 1].rank.ordinal &&
+            maxSameSuit.value[index + 1].rank.ordinal - 1 == maxSameSuit.value[index + 2].rank.ordinal &&
+            maxSameSuit.value[index + 2].rank.ordinal - 1 == maxSameSuit.value[index + 3].rank.ordinal &&
+            maxSameSuit.value[index + 3].rank.ordinal - 1 == maxSameSuit.value[index + 4].rank.ordinal
           ) {
-            val straightFlush = cards.subList(index, index + 5)
+            val straightFlush = maxSameSuit.value.subList(index, index + 5)
+            println(maxSameSuit.value)
             return StraightFlush(
               Quintuple(
                 straightFlush[0],
@@ -102,19 +103,19 @@ class Judgement(private val cards: List<Card>) {
         }
       }
       if (
-        cards.any { it.rank == Rank.ACE } &&
-        cards.any { it.rank == Rank.TWO } &&
-        cards.any { it.rank == Rank.THREE } &&
-        cards.any { it.rank == Rank.FOUR } &&
-        cards.any { it.rank == Rank.FIVE }
+        maxSameSuit.value.any { it.rank == Rank.ACE } &&
+        maxSameSuit.value.any { it.rank == Rank.TWO } &&
+        maxSameSuit.value.any { it.rank == Rank.THREE } &&
+        maxSameSuit.value.any { it.rank == Rank.FOUR } &&
+        maxSameSuit.value.any { it.rank == Rank.FIVE }
       ) {
         return StraightFlush(
           Quintuple(
-            checkNotNull(cards.find { it.rank == Rank.ACE }),
-            checkNotNull(cards.find { it.rank == Rank.TWO }),
-            checkNotNull(cards.find { it.rank == Rank.THREE }),
-            checkNotNull(cards.find { it.rank == Rank.FOUR }),
-            checkNotNull(cards.find { it.rank == Rank.FIVE })
+            checkNotNull(maxSameSuit.value.find { it.rank == Rank.ACE }),
+            checkNotNull(maxSameSuit.value.find { it.rank == Rank.TWO }),
+            checkNotNull(maxSameSuit.value.find { it.rank == Rank.THREE }),
+            checkNotNull(maxSameSuit.value.find { it.rank == Rank.FOUR }),
+            checkNotNull(maxSameSuit.value.find { it.rank == Rank.FIVE })
           )
         )
       }
