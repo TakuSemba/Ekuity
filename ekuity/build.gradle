@@ -14,4 +14,4 @@ dependencies {
     implementation deps.clikt
 }
 
-mainClassName = 'com.takusemba.skreen.MainKt'
+mainClassName = 'com.takusemba.ekuity.MainKt'
