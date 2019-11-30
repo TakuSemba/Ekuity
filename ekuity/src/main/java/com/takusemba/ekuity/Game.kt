@@ -10,13 +10,13 @@ class Game(private val deck: Deck, private val players: List<Player>, private va
   }
 
   fun play(): Result {
-    repeat(5 - board.cards.size) {
+    repeat(5 - board.cards().size) {
       board.flop(deck.draw())
     }
 
     val map: MutableMap<Hand, MutableSet<Player>> = mutableMapOf()
     for (player in players) {
-      val judgement = Judgement(listOf(player.first, player.second) + board.cards)
+      val judgement = Judgement(listOf(player.first, player.second) + board.cards())
       val hand = judgement.judge()
       val players = map.getOrDefault(hand, mutableSetOf())
       players.add(player)

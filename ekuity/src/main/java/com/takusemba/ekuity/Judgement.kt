@@ -62,6 +62,7 @@ class Judgement(private val cards: List<Card>) {
     // two pair
     val twoPair = checkTwoPair(sorted)
     if (twoPair != null) {
+      println(twoPair)
       return twoPair
     }
 
@@ -89,7 +90,6 @@ class Judgement(private val cards: List<Card>) {
             maxSameSuit.value[index + 3].rank.ordinal - 1 == maxSameSuit.value[index + 4].rank.ordinal
           ) {
             val straightFlush = maxSameSuit.value.subList(index, index + 5)
-            println(maxSameSuit.value)
             return StraightFlush(
               Quintuple(
                 straightFlush[0],

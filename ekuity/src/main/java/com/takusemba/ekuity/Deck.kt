@@ -1,7 +1,7 @@
 package com.takusemba.ekuity
 
 data class Deck(
-  private val cards: MutableList<Card> = MutableList(52) { index ->
+  private val _cards: MutableList<Card> = MutableList(52) { index ->
     val rank = when (index % 13) {
       0 -> Rank.TWO
       1 -> Rank.THREE
@@ -29,10 +29,34 @@ data class Deck(
   }
 ) {
 
+  init {
+    require(_cards.count { it.rank == Rank.TWO } == 4)
+    require(_cards.count { it.rank == Rank.THREE } == 4)
+    require(_cards.count { it.rank == Rank.FOUR } == 4)
+    require(_cards.count { it.rank == Rank.FIVE } == 4)
+    require(_cards.count { it.rank == Rank.SIX } == 4)
+    require(_cards.count { it.rank == Rank.SEVEN } == 4)
+    require(_cards.count { it.rank == Rank.EIGHT } == 4)
+    require(_cards.count { it.rank == Rank.NINE } == 4)
+    require(_cards.count { it.rank == Rank.TEN } == 4)
+    require(_cards.count { it.rank == Rank.JACK } == 4)
+    require(_cards.count { it.rank == Rank.QUEEN } == 4)
+    require(_cards.count { it.rank == Rank.KING } == 4)
+    require(_cards.count { it.rank == Rank.ACE } == 4)
+    require(_cards.count { it.suit == Suit.CLUB } == 13)
+    require(_cards.count { it.suit == Suit.HEART } == 13)
+    require(_cards.count { it.suit == Suit.DIAMOND } == 13)
+    require(_cards.count { it.suit == Suit.SPADE } == 13)
+  }
+
+  fun cards(): List<Card> {
+    return _cards
+  }
+
   fun draw(): Card {
-    val card = cards.random()
-    if (cards.contains(card)) {
-      cards.remove(card)
+    val card = _cards.random()
+    if (_cards.contains(card)) {
+      _cards.remove(card)
     } else {
       throw IllegalStateException("$card is not found in deck")
     }
