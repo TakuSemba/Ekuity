@@ -1,6 +1,6 @@
 package com.takusemba.ekuity
 
-data class Board(private val seed: List<Card>) {
+data class Board(private val seed: List<Card> = emptyList()) {
 
   private val flops = mutableListOf<Card>()
 

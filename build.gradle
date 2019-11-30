@@ -9,6 +9,8 @@ buildscript {
                     stdlib: "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}",
             ],
             clikt : "com.github.ajalt:clikt:${versions.clikt}",
+            junit: "junit:junit:4.12",
+            truth: "com.google.truth:truth:1.0",
     ]
     repositories {
         google()

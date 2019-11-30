@@ -1,8 +1,28 @@
 package com.takusemba.ekuity
 
 import com.takusemba.ekuity.util.Quadruple
+import com.takusemba.ekuity.util.Quintuple
+import com.takusemba.ekuity.util.toList
 
-sealed class Hand : Comparable<Hand> {
+sealed class Hand(open val cards: List<Card>) : Comparable<Hand> {
+
+  init {
+    println(cards)
+  }
+
+  private val maxSameRank by lazy {
+    checkNotNull(
+      cards.groupBy { it.rank }
+        .toSortedMap(Comparator { a, b -> b.compareTo(a) })
+        .maxBy { it.value.size }
+    )
+  }
+  val maxSameRankCount by lazy { maxSameRank.value.count() }
+
+  private val maxSameSuit by lazy {
+    checkNotNull(cards.groupBy { it.suit }.maxBy { it.value.size })
+  }
+  val maxSameSuitCount by lazy { maxSameSuit.value.count() }
 
   data class HighCard(
     private val firstKicker: Card,
@@ -10,13 +30,15 @@ sealed class Hand : Comparable<Hand> {
     private val thirdKicker: Card,
     private val forthKicker: Card,
     private val fifthKicker: Card
-  ) : Hand() {
+  ) : Hand(listOf(firstKicker, secondKicker, thirdKicker, firstKicker, fifthKicker)) {
 
     init {
       require(firstKicker > secondKicker)
       require(secondKicker > thirdKicker)
       require(thirdKicker > forthKicker)
       require(forthKicker > fifthKicker)
+      require(maxSameRankCount == 1)
+      require(maxSameSuitCount < 5)
     }
 
     override fun compareTo(other: Hand): Int {
@@ -53,12 +75,14 @@ sealed class Hand : Comparable<Hand> {
     private val firstKicker: Card,
     private val secondKicker: Card,
     private val thirdKicker: Card
-  ) : Hand() {
+  ) : Hand(pair.toList() + firstKicker + secondKicker + thirdKicker) {
 
     init {
       require(pair.first.rank == pair.second.rank)
       require(firstKicker > secondKicker)
       require(secondKicker > thirdKicker)
+      require(maxSameRankCount == 2)
+      require(maxSameSuitCount < 5)
     }
 
     override fun compareTo(other: Hand): Int {
@@ -91,11 +115,13 @@ sealed class Hand : Comparable<Hand> {
     private val firstPair: Pair<Card, Card>,
     private val secondPair: Pair<Card, Card>,
     private val kicker: Card
-  ) : Hand() {
+  ) : Hand(firstPair.toList() + secondPair.toList() + kicker) {
 
     init {
       require(firstPair.first.rank == firstPair.second.rank)
       require(secondPair.first.rank == secondPair.second.rank)
+      require(maxSameRankCount == 2)
+      require(maxSameSuitCount < 5)
     }
 
     override fun compareTo(other: Hand): Int {
@@ -125,12 +151,14 @@ sealed class Hand : Comparable<Hand> {
     private val triple: Triple<Card, Card, Card>,
     private val firstKicker: Card,
     private val secondKicker: Card
-  ) : Hand() {
+  ) : Hand(triple.toList() + firstKicker + secondKicker) {
 
     init {
       require(triple.first.rank == triple.second.rank)
       require(triple.second.rank == triple.third.rank)
       require(firstKicker.rank > secondKicker.rank)
+      require(maxSameRankCount == 3)
+      require(maxSameSuitCount < 5)
     }
 
     override fun compareTo(other: Hand): Int {
@@ -156,7 +184,14 @@ sealed class Hand : Comparable<Hand> {
     }
   }
 
-  data class Straight(private val cards: List<Card>) : Hand() {
+  data class Straight(
+    val quintuple: Quintuple<Card, Card, Card, Card, Card>
+  ) : Hand(quintuple.toList()) {
+
+    init {
+      require(maxSameRankCount == 1)
+      require(maxSameSuitCount < 5)
+    }
 
     override fun compareTo(other: Hand): Int {
       return when (other) {
@@ -175,13 +210,16 @@ sealed class Hand : Comparable<Hand> {
     }
   }
 
-  data class Flush(private val cards: List<Card>) : Hand() {
+  data class Flush(
+    val quintuple: Quintuple<Card, Card, Card, Card, Card>
+  ) : Hand(quintuple.toList()) {
 
     init {
       require(cards[0].suit == cards[1].suit)
       require(cards[1].suit == cards[2].suit)
       require(cards[2].suit == cards[3].suit)
       require(cards[3].suit == cards[4].suit)
+      require(maxSameSuitCount == 5)
     }
 
     override fun compareTo(other: Hand): Int {
@@ -204,12 +242,13 @@ sealed class Hand : Comparable<Hand> {
   data class FullHouse(
     private val triple: Triple<Card, Card, Card>,
     private val pair: Pair<Card, Card>
-  ) : Hand() {
+  ) : Hand(triple.toList() + pair.toList()) {
 
     init {
       require(triple.first.rank == triple.second.rank)
       require(triple.second.rank == triple.third.rank)
       require(pair.first.rank == pair.second.rank)
+      require(maxSameRankCount == 3)
     }
 
     override fun compareTo(other: Hand): Int {
@@ -235,7 +274,11 @@ sealed class Hand : Comparable<Hand> {
   data class Quads(
     private val quadruple: Quadruple<Card, Card, Card, Card>,
     private val kicker: Card
-  ) : Hand() {
+  ) : Hand(quadruple.toList() + kicker) {
+
+    init {
+      require(maxSameRankCount == 4)
+    }
 
     override fun compareTo(other: Hand): Int {
       return when (other) {
@@ -257,13 +300,13 @@ sealed class Hand : Comparable<Hand> {
     }
   }
 
-  data class StraightFlush(private val cards: List<Card>) : Hand() {
+  data class StraightFlush(
+    val quintuple: Quintuple<Card, Card, Card, Card, Card>
+  ) : Hand(quintuple.toList()) {
 
     init {
-      require(cards[0].suit == cards[1].suit)
-      require(cards[1].suit == cards[2].suit)
-      require(cards[2].suit == cards[3].suit)
-      require(cards[3].suit == cards[4].suit)
+      require(maxSameRankCount == 1)
+      require(maxSameSuitCount == 5)
     }
 
     override fun compareTo(other: Hand): Int {

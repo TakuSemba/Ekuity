@@ -1,8 +1,8 @@
 package com.takusemba.ekuity
 
-sealed class Result(hand: Hand) {
+sealed class Result(open val hand: Hand) {
 
-  class Tie(val hand: Hand) : Result(hand)
+  data class Tie(override val hand: Hand) : Result(hand)
 
-  class Settlement(val winner: Player, hand: Hand) : Result(hand)
+  data class Settlement(val winner: Player, override val hand: Hand) : Result(hand)
 }
