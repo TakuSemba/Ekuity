@@ -2,6 +2,10 @@ package com.takusemba.ekuity
 
 class Deck(private val cards: MutableList<Card> = fullDeck()) {
 
+  fun cards(): List<Card> {
+    return cards
+  }
+
   fun draw(): Card {
     val card = cards.random()
     if (cards.contains(card)) {
