@@ -6,10 +6,6 @@ import com.takusemba.ekuity.util.toList
 
 sealed class Hand(open val cards: List<Card>) : Comparable<Hand> {
 
-  init {
-    println(cards)
-  }
-
   private val maxSameRank by lazy {
     checkNotNull(
       cards.groupBy { it.rank }
@@ -30,7 +26,7 @@ sealed class Hand(open val cards: List<Card>) : Comparable<Hand> {
     private val thirdKicker: Card,
     private val forthKicker: Card,
     private val fifthKicker: Card
-  ) : Hand(listOf(firstKicker, secondKicker, thirdKicker, firstKicker, fifthKicker)) {
+  ) : Hand(listOf(firstKicker, secondKicker, thirdKicker, forthKicker, fifthKicker)) {
 
     init {
       require(firstKicker > secondKicker)

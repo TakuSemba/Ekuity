@@ -1,22 +1,13 @@
 package com.takusemba.ekuity
 
-data class Board(private val seed: List<Card> = emptyList()) {
-
-  private val flops = mutableListOf<Card>()
-
-  val cards: List<Card>
-    get() = seed + flops
+data class Board(val cards: MutableList<Card> = mutableListOf()) {
 
   init {
-    require(seed.isEmpty() || seed.size == 3 || seed.size == 4 || seed.size == 5)
+    require(cards.isEmpty() || cards.size == 3 || cards.size == 4 || cards.size == 5)
   }
 
   fun flop(card: Card) {
-    flops += card
+    cards += card
     require(cards.size <= 5)
-  }
-
-  fun clear() {
-    flops.clear()
   }
 }

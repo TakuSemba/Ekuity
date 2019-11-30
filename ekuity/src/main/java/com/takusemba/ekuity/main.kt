@@ -7,21 +7,18 @@ import com.takusemba.ekuity.Result.Tie
 class Ekuity : CliktCommand() {
 
   override fun run() {
-    val player1 = Player(Card(Rank.TEN, Suit.SPADE), Card(Rank.TEN, Suit.CLUB))
-    val player2 = Player(Card(Rank.NINE, Suit.CLUB), Card(Rank.EIGHT, Suit.DIAMOND))
-    val board = Board(
-      mutableListOf(
-        Card(Rank.ACE, Suit.SPADE),
-        Card(Rank.SIX, Suit.CLUB),
-        Card(Rank.SEVEN, Suit.DIAMOND)
-      )
-    )
-
     var tieCount = 0
     val map: MutableMap<Player, Int> = mutableMapOf()
 
+    val deck = Deck()
+    val player1 = Player(deck.draw(), deck.draw())
+    val player2 = Player(deck.draw(), deck.draw())
+    val board = Board(mutableListOf(deck.draw(), deck.draw(), deck.draw()))
+
     for (i in 0..1000) {
-      val game = Game(listOf(player1, player2), board)
+      val deckToPlay = deck.copy()
+      val boardToPlay = board.copy()
+      val game = Game(deckToPlay, listOf(player1, player2), boardToPlay)
       when (val result = game.play()) {
         is Settlement -> {
           map[result.winner] = map.getOrDefault(result.winner, 0) + 1

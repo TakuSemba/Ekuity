@@ -1,8 +1,7 @@
 package com.takusemba.ekuity
 
-class Deck {
-
-  private val cards = MutableList(52) { index ->
+data class Deck(
+  private val cards: MutableList<Card> = MutableList(52) { index ->
     val rank = when (index % 13) {
       0 -> Rank.TWO
       1 -> Rank.THREE
@@ -28,18 +27,15 @@ class Deck {
     }
     Card(rank, suit)
   }
+) {
 
-  fun remove(card: Card) {
+  fun draw(): Card {
+    val card = cards.random()
     if (cards.contains(card)) {
       cards.remove(card)
     } else {
       throw IllegalStateException("$card is not found in deck")
     }
-  }
-
-  fun draw(): Card {
-    val card = cards.random()
-    remove(card)
     return card
   }
 }

@@ -15,6 +15,7 @@ import com.takusemba.ekuity.util.Quintuple
 class Judgement(private val cards: List<Card>) {
 
   init {
+    require(cards.distinct().size == 7)
     require(cards.size == 7)
   }
 
@@ -232,9 +233,6 @@ class Judgement(private val cards: List<Card>) {
       val remain = cards.minus(maxSameRank.value)
       val firstKicker = checkNotNull(remain.maxBy { it.rank })
       val secondKicker = checkNotNull(remain.minus(firstKicker).maxBy { it.rank })
-      println(maxSameRank)
-      println(firstKicker)
-      println(secondKicker)
       return Trips(
         Triple(maxSameRank.value[0], maxSameRank.value[1], maxSameRank.value[2]),
         firstKicker,
