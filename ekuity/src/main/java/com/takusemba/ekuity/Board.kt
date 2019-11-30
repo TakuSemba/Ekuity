@@ -1,17 +1,23 @@
 package com.takusemba.ekuity
 
-data class Board(private val _cards: MutableList<Card> = mutableListOf()) {
+class Board(vararg initialCards: Card) {
+
+  private val cards: MutableList<Card> = mutableListOf()
 
   init {
-    require(_cards.isEmpty() || _cards.size == 3 || _cards.size == 4 || _cards.size == 5)
+    cards.addAll(initialCards)
   }
 
   fun cards(): List<Card> {
-    return _cards
+    return cards
   }
 
   fun flop(card: Card) {
-    _cards += card
-    require(_cards.size <= 5)
+    cards += card
+    require(cards.size <= 5)
+  }
+
+  fun copy(): Board {
+    return Board(*cards.toTypedArray())
   }
 }
