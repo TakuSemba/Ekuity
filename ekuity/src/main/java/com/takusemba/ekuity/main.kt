@@ -1,14 +1,32 @@
 package com.takusemba.ekuity
 
 import com.github.ajalt.clikt.core.CliktCommand
-import com.takusemba.ekuity.Result.Settlement
-import com.takusemba.ekuity.Result.Tie
+import com.github.ajalt.clikt.parameters.options.option
+import com.github.ajalt.clikt.parameters.options.required
+import com.github.ajalt.clikt.parameters.options.split
+import com.github.ajalt.clikt.parameters.options.validate
+import com.github.ajalt.clikt.parameters.options.versionOption
+import com.takusemba.ekuity.Result.WIN
 
 class Ekuity : CliktCommand() {
 
+  init {
+    versionOption("1.0.0")
+  }
+
+  val player by option("-p", "--player", "--players", help = "Sets players' cards")
+    .split(Regex(","))
+    .required()
+    .validate { }
+
+  val board by option("-b", "--board", help = "Sets board's cards")
+    .required()
+    .validate { }
+
   override fun run() {
-    var tieCount = 0
-    val map: MutableMap<Player, Int> = mutableMapOf()
+
+    echo("board: $board")
+    echo("player: $player")
 
     val deck = Deck()
 
@@ -30,22 +48,22 @@ class Ekuity : CliktCommand() {
 
     val board = Board()
 
-    for (i in 0..100000) {
+    val history: MutableMap<Player, List<Pair<Result, Hand>>> = mutableMapOf()
+
+    for (i in 0..1000) {
       val deckToPlay = deck.copy()
       val boardToPlay = board.copy()
       val game = Game(deckToPlay, listOf(player1, player2), boardToPlay)
-      when (val result = game.play()) {
-        is Settlement -> {
-          map[result.winner] = map.getOrDefault(result.winner, 0) + 1
-        }
-        is Tie -> {
-          tieCount += 1
-        }
+      val result = game.play()
+      for (player in result.keys) {
+        history[player] = history.getOrDefault(player, mutableListOf()) + result.getValue(player)
       }
     }
 
-    echo("player1: ${checkNotNull(map[player1]).toFloat() / 1000f}")
-    echo("player2: ${checkNotNull(map[player2]).toFloat() / 1000f}")
+    for (player in history.keys) {
+      echo("player: $player")
+      echo("wins: ${history.getValue(player).count { it.first == WIN }}")
+    }
   }
 }
 
