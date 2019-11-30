@@ -24,6 +24,7 @@ class JudgementTest {
       val result = game.play()
       history.add(result.hand)
     }
+    history.filterIsInstance<StraightFlush>().forEach { println(it) }
     println("HighCard: ${history.count { it is HighCard }}")
     println("OnePair: ${history.count { it is OnePair }}")
     println("TwoPair: ${history.count { it is TwoPair }}")

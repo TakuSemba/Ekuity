@@ -62,7 +62,6 @@ class Judgement(private val cards: List<Card>) {
     // two pair
     val twoPair = checkTwoPair(sorted)
     if (twoPair != null) {
-      println(twoPair)
       return twoPair
     }
 
