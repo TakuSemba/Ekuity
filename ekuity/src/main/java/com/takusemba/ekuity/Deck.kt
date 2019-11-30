@@ -12,6 +12,18 @@ class Deck(private val cards: MutableList<Card> = fullDeck()) {
     }
   }
 
+  fun remove(vararg cards: Card) {
+    for (card in cards) {
+      remove(card)
+    }
+  }
+
+  fun remove(cards: List<Card>) {
+    for (card in cards) {
+      remove(card)
+    }
+  }
+
   fun draw(): Card {
     val card = cards.random()
     if (cards.contains(card)) {

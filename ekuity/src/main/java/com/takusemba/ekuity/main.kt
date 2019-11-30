@@ -1,11 +1,13 @@
 package com.takusemba.ekuity
 
 import com.github.ajalt.clikt.core.CliktCommand
+import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.options.required
 import com.github.ajalt.clikt.parameters.options.split
 import com.github.ajalt.clikt.parameters.options.validate
 import com.github.ajalt.clikt.parameters.options.versionOption
+import com.github.ajalt.clikt.parameters.types.int
 import com.takusemba.ekuity.Result.WIN
 
 class Ekuity : CliktCommand() {
@@ -14,46 +16,49 @@ class Ekuity : CliktCommand() {
     versionOption("1.0.0")
   }
 
-  val player by option("-p", "--player", "--players", help = "Sets players' cards")
+  val player: List<String> by option("-p", "--player", "--players", help = "Sets players' cards")
     .split(Regex(","))
     .required()
-    .validate { }
+    .validate {
+      // TODO
+    }
 
-  val board by option("-b", "--board", help = "Sets board's cards")
+  val board: String by option("-b", "--board", help = "Sets board's cards")
     .required()
-    .validate { }
+    .validate {
+      // TODO
+    }
+
+  val exposed: List<String>? by option("-e", "--exposed", help = "Sets exposed cards")
+    .split(Regex(","))
+    .validate {
+      // TODO
+    }
+
+  val iterator: Int by option("-i", "--iterations", help = "Sets iteration count")
+    .int()
+    .default(1000)
 
   override fun run() {
-
-    echo("board: $board")
-    echo("player: $player")
-
     val deck = Deck()
 
-    val card1 = Card(Rank.NINE, Suit.DIAMOND)
-    val card2 = Card(Rank.KING, Suit.HEART)
-    val card3 = Card(Rank.NINE, Suit.CLUB)
-    val card4 = Card(Rank.TWO, Suit.DIAMOND)
+    val playerCards = player.map { Pair(Card.of(it.substring(0, 2)), Card.of(it.substring(2, 4))) }
+    val players = playerCards.map { Player(it.first, it.second) }
 
-    val player1 = Player(card1, card2)
-    val player2 = Player(card3, card4)
+    val boardCards = board.windowed(size = 2, step = 2).map { Card.of(it) }.toTypedArray()
+    val board = Board(*boardCards)
 
-    deck.remove(card1)
-    deck.remove(card2)
-    deck.remove(card3)
-    deck.remove(card4)
+    val exposedCards = exposed?.map { Card.of(it) } ?: emptyList()
 
-    echo("player1: $player1")
-    echo("player2: $player2")
-
-    val board = Board()
+    deck.remove(playerCards.flatMap { listOf(it.first, it.second) })
+    deck.remove(*boardCards)
+    deck.remove(exposedCards)
 
     val history: MutableMap<Player, List<Pair<Result, Hand>>> = mutableMapOf()
-
-    for (i in 0..1000) {
+    for (i in 0..iterator) {
       val deckToPlay = deck.copy()
       val boardToPlay = board.copy()
-      val game = Game(deckToPlay, listOf(player1, player2), boardToPlay)
+      val game = Game(deckToPlay, players, boardToPlay)
       val result = game.play()
       for (player in result.keys) {
         history[player] = history.getOrDefault(player, mutableListOf()) + result.getValue(player)
