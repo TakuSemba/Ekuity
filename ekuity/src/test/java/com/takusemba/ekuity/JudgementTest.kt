@@ -1,5 +1,6 @@
 package com.takusemba.ekuity
 
+import com.google.common.truth.Truth.assertThat
 import com.takusemba.ekuity.Hand.Flush
 import com.takusemba.ekuity.Hand.FullHouse
 import com.takusemba.ekuity.Hand.HighCard
@@ -9,69 +10,167 @@ import com.takusemba.ekuity.Hand.Straight
 import com.takusemba.ekuity.Hand.StraightFlush
 import com.takusemba.ekuity.Hand.Trips
 import com.takusemba.ekuity.Hand.TwoPair
+import com.takusemba.ekuity.Rank.ACE
+import com.takusemba.ekuity.Rank.FIVE
+import com.takusemba.ekuity.Rank.FOUR
+import com.takusemba.ekuity.Rank.JACK
+import com.takusemba.ekuity.Rank.KING
+import com.takusemba.ekuity.Rank.NINE
+import com.takusemba.ekuity.Rank.QUEEN
+import com.takusemba.ekuity.Rank.SEVEN
+import com.takusemba.ekuity.Rank.SIX
+import com.takusemba.ekuity.Rank.TEN
+import com.takusemba.ekuity.Rank.THREE
+import com.takusemba.ekuity.Rank.TWO
+import com.takusemba.ekuity.Suit.CLUB
+import com.takusemba.ekuity.Suit.DIAMOND
+import com.takusemba.ekuity.Suit.HEART
+import com.takusemba.ekuity.Suit.SPADE
 import org.junit.Test
 
 class JudgementTest {
 
   @Test
-  fun checkWithinConstraint() {
-    val history = mutableListOf<Hand>()
-    for (i in 0..1000) {
-      val deck = Deck()
-      val board = Board()
-      val player1 = Player(deck.draw(), deck.draw())
-      val game = Game(deck, listOf(player1), board)
-      val result = game.play()
-      history.add(result.hand)
-    }
-    history.filterIsInstance<StraightFlush>().forEach { println(it) }
-    println("HighCard: ${history.count { it is HighCard }}")
-    println("OnePair: ${history.count { it is OnePair }}")
-    println("TwoPair: ${history.count { it is TwoPair }}")
-    println("Trips: ${history.count { it is Trips }}")
-    println("Straight: ${history.count { it is Straight }}")
-    println("Flush: ${history.count { it is Flush }}")
-    println("FullHouse: ${history.count { it is FullHouse }}")
-    println("Quads: ${history.count { it is Quads }}")
-    println("StraightFlush: ${history.count { it is StraightFlush }}")
-  }
-
-  @Test
-  fun checkDraw() {
-    val history = mutableListOf<Card>()
-    for (i in 0..1000) {
-      val deck = Deck()
-      history.add(deck.draw())
-    }
-    println("two: ${history.count { it.rank == Rank.TWO }}")
-    println("three: ${history.count { it.rank == Rank.THREE }}")
-    println("four: ${history.count { it.rank == Rank.FOUR }}")
-    println("five: ${history.count { it.rank == Rank.FIVE }}")
-    println("six: ${history.count { it.rank == Rank.SIX }}")
-    println("seven: ${history.count { it.rank == Rank.SEVEN }}")
-    println("eight: ${history.count { it.rank == Rank.EIGHT }}")
-    println("nine: ${history.count { it.rank == Rank.NINE }}")
-    println("ten: ${history.count { it.rank == Rank.TEN }}")
-    println("jack: ${history.count { it.rank == Rank.JACK }}")
-    println("queen: ${history.count { it.rank == Rank.QUEEN }}")
-    println("king: ${history.count { it.rank == Rank.KING }}")
-    println("ace: ${history.count { it.rank == Rank.ACE }}")
-  }
-
-  @Test
-  fun check() {
-    val judgement = Judgement(
-      listOf(
-        Card(rank = Rank.QUEEN, suit = Suit.SPADE),
-        Card(rank = Rank.TEN, suit = Suit.SPADE),
-        Card(rank = Rank.FIVE, suit = Suit.CLUB),
-        Card(rank = Rank.KING, suit = Suit.DIAMOND),
-        Card(rank = Rank.TWO, suit = Suit.CLUB),
-        Card(rank = Rank.THREE, suit = Suit.HEART),
-        Card(rank = Rank.NINE, suit = Suit.HEART)
-      )
+  fun judgeHighCard() {
+    val cards = listOf(
+      Card(ACE, CLUB),
+      Card(KING, DIAMOND),
+      Card(QUEEN, HEART),
+      Card(JACK, DIAMOND),
+      Card(SEVEN, DIAMOND),
+      Card(THREE, SPADE),
+      Card(TWO, SPADE)
     )
+    val judgement = Judgement(cards)
     val hand = judgement.judge()
-    println(hand)
+    assertThat(hand).isInstanceOf(HighCard::class.java)
+  }
+
+  @Test
+  fun judgeOnePair() {
+    val cards = listOf(
+      Card(ACE, CLUB),
+      Card(ACE, DIAMOND),
+      Card(QUEEN, HEART),
+      Card(JACK, DIAMOND),
+      Card(SEVEN, DIAMOND),
+      Card(THREE, SPADE),
+      Card(TWO, SPADE)
+    )
+    val judgement = Judgement(cards)
+    val hand = judgement.judge()
+    assertThat(hand).isInstanceOf(OnePair::class.java)
+  }
+
+  @Test
+  fun judgeTwoPair() {
+    val cards = listOf(
+      Card(ACE, CLUB),
+      Card(ACE, DIAMOND),
+      Card(QUEEN, HEART),
+      Card(QUEEN, DIAMOND),
+      Card(SEVEN, DIAMOND),
+      Card(THREE, SPADE),
+      Card(TWO, SPADE)
+    )
+    val judgement = Judgement(cards)
+    val hand = judgement.judge()
+    assertThat(hand).isInstanceOf(TwoPair::class.java)
+  }
+
+  @Test
+  fun judgeTrips() {
+    val cards = listOf(
+      Card(ACE, CLUB),
+      Card(ACE, DIAMOND),
+      Card(ACE, HEART),
+      Card(QUEEN, DIAMOND),
+      Card(SEVEN, DIAMOND),
+      Card(THREE, SPADE),
+      Card(TWO, SPADE)
+    )
+    val judgement = Judgement(cards)
+    val hand = judgement.judge()
+    assertThat(hand).isInstanceOf(Trips::class.java)
+  }
+
+  @Test
+  fun judgeStraight() {
+    val cards = listOf(
+      Card(KING, DIAMOND),
+      Card(JACK, DIAMOND),
+      Card(SIX, SPADE),
+      Card(FIVE, HEART),
+      Card(FOUR, CLUB),
+      Card(THREE, HEART),
+      Card(TWO, HEART)
+    )
+    val judgement = Judgement(cards)
+    val hand = judgement.judge()
+    assertThat(hand).isInstanceOf(Straight::class.java)
+  }
+
+  @Test
+  fun judgeFlush() {
+    val cards = listOf(
+      Card(KING, HEART),
+      Card(JACK, HEART),
+      Card(NINE, HEART),
+      Card(SIX, SPADE),
+      Card(FOUR, CLUB),
+      Card(THREE, HEART),
+      Card(TWO, HEART)
+    )
+    val judgement = Judgement(cards)
+    val hand = judgement.judge()
+    assertThat(hand).isInstanceOf(Flush::class.java)
+  }
+
+  @Test
+  fun judgeFullHouse() {
+    val cards = listOf(
+      Card(ACE, CLUB),
+      Card(ACE, DIAMOND),
+      Card(ACE, HEART),
+      Card(QUEEN, DIAMOND),
+      Card(QUEEN, CLUB),
+      Card(THREE, SPADE),
+      Card(TWO, SPADE)
+    )
+    val judgement = Judgement(cards)
+    val hand = judgement.judge()
+    assertThat(hand).isInstanceOf(FullHouse::class.java)
+  }
+
+  @Test
+  fun judgeQuads() {
+    val cards = listOf(
+      Card(ACE, CLUB),
+      Card(ACE, DIAMOND),
+      Card(ACE, HEART),
+      Card(ACE, SPADE),
+      Card(QUEEN, CLUB),
+      Card(THREE, SPADE),
+      Card(TWO, SPADE)
+    )
+    val judgement = Judgement(cards)
+    val hand = judgement.judge()
+    assertThat(hand).isInstanceOf(Quads::class.java)
+  }
+
+  @Test
+  fun judgeStraightFlush() {
+    val cards = listOf(
+      Card(TEN, SPADE),
+      Card(SEVEN, CLUB),
+      Card(SIX, CLUB),
+      Card(FIVE, CLUB),
+      Card(FOUR, CLUB),
+      Card(THREE, CLUB),
+      Card(TWO, SPADE)
+    )
+    val judgement = Judgement(cards)
+    val hand = judgement.judge()
+    assertThat(hand).isInstanceOf(StraightFlush::class.java)
   }
 }
