@@ -13,7 +13,7 @@ class Ekuity : CliktCommand() {
     val deck = Deck()
     val player1 = Player(deck.draw(), deck.draw())
     val player2 = Player(deck.draw(), deck.draw())
-    val board = Board(mutableListOf(deck.draw(), deck.draw(), deck.draw()))
+    val board = Board(deck.draw(), deck.draw(), deck.draw())
 
     for (i in 0..1000) {
       val deckToPlay = deck.copy()

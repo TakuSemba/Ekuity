@@ -1,5 +1,6 @@
 package com.takusemba.ekuity
 
+import com.takusemba.ekuity.Board.Stage
 import com.takusemba.ekuity.Result.Settlement
 import com.takusemba.ekuity.Result.Tie
 
@@ -10,7 +11,13 @@ class Game(private val deck: Deck, private val players: List<Player>, private va
   }
 
   fun play(): Result {
-    repeat(5 - board.cards().size) {
+    val draws = when (board.state()) {
+      Stage.PRE_FLOP -> 5
+      Stage.FLOP -> 3
+      Stage.TURN -> 1
+      Stage.LIVER -> 0
+    }
+    repeat(draws) {
       board.flop(deck.draw())
     }
 

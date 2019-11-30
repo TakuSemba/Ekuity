@@ -8,6 +8,20 @@ class Board(vararg initialCards: Card) {
     cards.addAll(initialCards)
   }
 
+  enum class Stage {
+    PRE_FLOP, FLOP, TURN, LIVER
+  }
+
+  fun state(): Stage {
+    return when (cards.size) {
+      0 -> Stage.PRE_FLOP
+      3 -> Stage.FLOP
+      4 -> Stage.TURN
+      5 -> Stage.LIVER
+      else -> throw IllegalStateException("Unknown state")
+    }
+  }
+
   fun cards(): List<Card> {
     return cards
   }
