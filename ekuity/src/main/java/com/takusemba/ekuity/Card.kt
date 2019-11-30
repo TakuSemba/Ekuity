@@ -6,6 +6,10 @@ data class Card(val rank: Rank, val suit: Suit) : Comparable<Card> {
     return rank.ordinal - other.rank.ordinal
   }
 
+  override fun toString(): String {
+    return rank.toString() + suit.toString()
+  }
+
   companion object {
 
     fun of(value: String): Card {

@@ -11,6 +11,7 @@ compileTestKotlin {
 dependencies {
   implementation deps.kotlin.stdlib
   implementation deps.clikt
+  implementation deps.picnic
   testImplementation deps.junit
   testImplementation deps.truth
 }

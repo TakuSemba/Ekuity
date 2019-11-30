@@ -7,6 +7,11 @@ import com.github.ajalt.clikt.parameters.options.required
 import com.github.ajalt.clikt.parameters.options.split
 import com.github.ajalt.clikt.parameters.options.versionOption
 import com.github.ajalt.clikt.parameters.types.int
+import com.jakewharton.picnic.BorderStyle
+import com.jakewharton.picnic.TextAlignment
+import com.jakewharton.picnic.table
+import com.takusemba.ekuity.Result.LOSE
+import com.takusemba.ekuity.Result.TIE
 import com.takusemba.ekuity.Result.WIN
 
 class Ekuity : CliktCommand() {
@@ -25,7 +30,7 @@ class Ekuity : CliktCommand() {
   val exposed: List<String>? by option("-e", "--exposed", help = "Sets exposed cards")
     .split(Regex(","))
 
-  val iterator: Int by option("-i", "--iterations", help = "Sets iteration count")
+  val iterations: Int by option("-i", "--iterations", help = "Sets iteration count")
     .int()
     .default(1000)
 
@@ -45,7 +50,7 @@ class Ekuity : CliktCommand() {
     deck.remove(exposedCards)
 
     val history: MutableMap<Player, List<Pair<Result, Hand>>> = mutableMapOf()
-    for (i in 0..iterator) {
+    for (i in 0..iterations) {
       val deckToPlay = deck.copy()
       val boardToPlay = board.copy()
       val game = Game(deckToPlay, players, boardToPlay)
@@ -55,10 +60,37 @@ class Ekuity : CliktCommand() {
       }
     }
 
-    for (player in history.keys) {
-      echo("player: $player")
-      echo("wins: ${history.getValue(player).count { it.first == WIN }}")
+    echo("")
+
+    val table = table {
+      style {
+        borderStyle = BorderStyle.Hidden
+      }
+      cellStyle {
+        alignment = TextAlignment.MiddleCenter
+        paddingLeft = 1
+        paddingRight = 1
+        borderLeft = true
+        borderRight = true
+      }
+      header {
+        cellStyle {
+          border = true
+          alignment = TextAlignment.MiddleCenter
+        }
+        row("player", "win", "lose", "tie")
+      }
+      body {
+        for (player in history.keys) {
+          val win = history.getValue(player).count { it.first == WIN } / iterations.toFloat()
+          val lose = history.getValue(player).count { it.first == LOSE } / iterations.toFloat()
+          val tie = history.getValue(player).count { it.first == TIE } / iterations.toFloat()
+          row("$player", "$win", "$lose", "$tie")
+        }
+      }
     }
+    echo(table.toString())
+    echo("$iterations iterations")
   }
 }
 
