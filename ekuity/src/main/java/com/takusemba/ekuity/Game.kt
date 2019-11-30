@@ -13,7 +13,7 @@ class Game(private val deck: Deck, private val players: List<Player>, private va
   fun play(): Result {
     val draws = when (board.state()) {
       Stage.PRE_FLOP -> 5
-      Stage.FLOP -> 3
+      Stage.FLOP -> 2
       Stage.TURN -> 1
       Stage.LIVER -> 0
     }

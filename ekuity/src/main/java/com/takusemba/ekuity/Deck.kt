@@ -6,6 +6,12 @@ class Deck(private val cards: MutableList<Card> = fullDeck()) {
     return cards
   }
 
+  fun remove(card: Card) {
+    if (cards.contains(card)) {
+      cards.remove(card)
+    }
+  }
+
   fun draw(): Card {
     val card = cards.random()
     if (cards.contains(card)) {

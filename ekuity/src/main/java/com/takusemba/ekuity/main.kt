@@ -11,11 +11,26 @@ class Ekuity : CliktCommand() {
     val map: MutableMap<Player, Int> = mutableMapOf()
 
     val deck = Deck()
-    val player1 = Player(deck.draw(), deck.draw())
-    val player2 = Player(deck.draw(), deck.draw())
-    val board = Board(deck.draw(), deck.draw(), deck.draw())
 
-    for (i in 0..1000) {
+    val card1 = Card(Rank.NINE, Suit.DIAMOND)
+    val card2 = Card(Rank.KING, Suit.HEART)
+    val card3 = Card(Rank.NINE, Suit.CLUB)
+    val card4 = Card(Rank.TWO, Suit.DIAMOND)
+
+    val player1 = Player(card1, card2)
+    val player2 = Player(card3, card4)
+
+    deck.remove(card1)
+    deck.remove(card2)
+    deck.remove(card3)
+    deck.remove(card4)
+
+    echo("player1: $player1")
+    echo("player2: $player2")
+
+    val board = Board()
+
+    for (i in 0..100000) {
       val deckToPlay = deck.copy()
       val boardToPlay = board.copy()
       val game = Game(deckToPlay, listOf(player1, player2), boardToPlay)
