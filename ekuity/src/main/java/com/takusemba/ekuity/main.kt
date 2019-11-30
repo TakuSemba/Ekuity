@@ -13,6 +13,8 @@ import com.jakewharton.picnic.table
 import com.takusemba.ekuity.Result.LOSE
 import com.takusemba.ekuity.Result.TIE
 import com.takusemba.ekuity.Result.WIN
+import kotlin.system.measureTimeMillis
+import kotlin.time.measureTime
 
 class Ekuity : CliktCommand() {
 
@@ -50,13 +52,15 @@ class Ekuity : CliktCommand() {
     deck.remove(exposedCards)
 
     val history: MutableMap<Player, List<Pair<Result, Hand>>> = mutableMapOf()
-    for (i in 0..iterations) {
-      val deckToPlay = deck.copy()
-      val boardToPlay = board.copy()
-      val game = Game(deckToPlay, players, boardToPlay)
-      val result = game.play()
-      for (player in result.keys) {
-        history[player] = history.getOrDefault(player, mutableListOf()) + result.getValue(player)
+    val time = measureTimeMillis {
+      for (i in 0..iterations) {
+        val deckToPlay = deck.copy()
+        val boardToPlay = board.copy()
+        val game = Game(deckToPlay, players, boardToPlay)
+        val result = game.play()
+        for (player in result.keys) {
+          history[player] = history.getOrDefault(player, mutableListOf()) + result.getValue(player)
+        }
       }
     }
 
@@ -90,7 +94,7 @@ class Ekuity : CliktCommand() {
       }
     }
     echo(table.toString())
-    echo("$iterations iterations")
+    echo("$iterations iterations in $time ms")
   }
 }
 
