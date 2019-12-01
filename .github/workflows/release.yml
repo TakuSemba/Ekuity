@@ -34,7 +34,6 @@ jobs:
       with:
         homebrew-tap: takusemba/homebrew-ekuity
         formula-name: ekuity
-        download-url: https://github.com/TakuSemba/Ekuity/releases/download/${GITHUB_TAG_NAME}/ekuity.tar
+        download-url: https://github.com/TakuSemba/Ekuity/releases/download/${{ GITHUB_TAG_NAME }}/ekuity.tar
       env:
         COMMITTER_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
-          
