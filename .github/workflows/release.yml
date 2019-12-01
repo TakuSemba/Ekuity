@@ -29,4 +29,5 @@ jobs:
       with:
         tap: takusemba/homebrew-ekuity
         homebrew-tap: TakuSemba/Ekuity
+        formula-name: ekuity
           
