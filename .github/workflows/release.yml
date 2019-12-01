@@ -31,5 +31,5 @@ jobs:
         homebrew-tap: TakuSemba/Ekuity
         formula-name: ekuity
       env:
-        COMMITTER_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
