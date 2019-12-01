@@ -16,11 +16,9 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 1.8
-    - name: Get Tag Name
-      uses: olegtarasov/get-tag@j1
-      id: tagName
-      with:
-        tagname: ${{ steps.tagName.outputs.tag }}
+    - name: Get tag version
+      id: tag_version
+      run: echo ::set-output name=TAG_VERSION::${GITHUB_REF/refs\/tags\//}
     - name: Build with Gradle
       run: ./gradlew distTar distZip
     - name: GitHub Release
@@ -34,6 +32,6 @@ jobs:
       with:
         homebrew-tap: takusemba/homebrew-ekuity
         formula-name: ekuity
-        download-url: https://github.com/TakuSemba/Ekuity/releases/download/${{ GITHUB_TAG_NAME }}/ekuity.tar
+        download-url: https://github.com/TakuSemba/Ekuity/releases/download/${{ steps.tag_version.outputs.TAG_VERSION }}/ekuity.tar
       env:
         COMMITTER_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
