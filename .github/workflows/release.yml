@@ -19,7 +19,7 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew distTar distZip
     - name: GitHub Release
-      uses: softprops/action-gh-release@v0.1.0
+      uses: softprops/action-gh-release@v0.1.4
       with:
         file: ekuity/build/distributions/*
       env:
