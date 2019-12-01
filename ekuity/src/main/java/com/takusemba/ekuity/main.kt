@@ -14,7 +14,6 @@ import com.takusemba.ekuity.Result.LOSE
 import com.takusemba.ekuity.Result.TIE
 import com.takusemba.ekuity.Result.WIN
 import kotlin.system.measureTimeMillis
-import kotlin.time.measureTime
 
 class Ekuity : CliktCommand() {
 
@@ -26,8 +25,7 @@ class Ekuity : CliktCommand() {
     .split(Regex(","))
     .required()
 
-  val board: String by option("-b", "--board", help = "Sets board's cards")
-    .required()
+  val board: String? by option("-b", "--board", help = "Sets board's cards")
 
   val exposed: List<String>? by option("-e", "--exposed", help = "Sets exposed cards")
     .split(Regex(","))
@@ -42,7 +40,7 @@ class Ekuity : CliktCommand() {
     val playerCards = players.map { Pair(Card.of(it.substring(0, 2)), Card.of(it.substring(2, 4))) }
     val players = playerCards.map { Player(it.first, it.second) }
 
-    val boardCards = board.windowed(size = 2, step = 2).map { Card.of(it) }.toTypedArray()
+    val boardCards = board?.windowed(2, 2)?.map { Card.of(it) }?.toTypedArray() ?: emptyArray()
     val board = Board(*boardCards)
 
     val exposedCards = exposed?.map { Card.of(it) } ?: emptyList()

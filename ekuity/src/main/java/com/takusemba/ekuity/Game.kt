@@ -29,16 +29,18 @@ class Game(private val deck: Deck, private val players: List<Player>, private va
     }
 
     val sortedHandMap = handMap.toSortedMap(Comparator { a, b -> b.compareTo(a) })
-    val winners = checkNotNull(sortedHandMap[sortedHandMap.firstKey()])
 
-    val isTie = winners.size == players.size
+    val firstHand = sortedHandMap.firstKey()
+    val strongestHands = sortedHandMap.keys - sortedHandMap.keys.filter { hand -> hand < firstHand }
+
+    val isTie = strongestHands.size == sortedHandMap.keys.size
 
     val result: MutableMap<Player, Pair<Result, Hand>> = mutableMapOf()
     for (player in players) {
       if (isTie) {
         result[player] = Pair(Result.TIE, playerMap.getValue(player))
       } else {
-        result[player] = if (winners.contains(player)) {
+        result[player] = if (strongestHands.contains(playerMap[player])) {
           Pair(Result.WIN, playerMap.getValue(player))
         } else {
           Pair(Result.LOSE, playerMap.getValue(player))
