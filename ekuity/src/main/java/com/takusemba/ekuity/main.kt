@@ -28,7 +28,7 @@ import kotlin.system.measureTimeMillis
 class Ekuity : CliktCommand() {
 
   init {
-    versionOption("1.0.0")
+    versionOption("1.0.1")
   }
 
   val players: List<String> by option("-p", "--player", "--players", help = "Set players' cards")
