@@ -24,7 +24,7 @@ jobs:
         file: ekuity/build/distributions/*
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    - name: homebrew-tap
+    - name: Update Homebrew Tap
       uses: izumin5210/action-homebrew-tap@v1.0.0
       with:
         tap: takusemba/homebrew-ekuity
