@@ -28,12 +28,12 @@ class Game(private val deck: Deck, private val players: List<Player>, private va
       playerMap[player] = hand
     }
 
-    val sortedHandMap = handMap.toSortedMap(Comparator { a, b -> b.compareTo(a) })
+    val descendingHands = handMap.toSortedMap(Comparator { a, b -> b.compareTo(a) }).keys
 
-    val firstHand = sortedHandMap.firstKey()
-    val strongestHands = sortedHandMap.keys - sortedHandMap.keys.filter { hand -> hand < firstHand }
+    val firstHand = descendingHands.first()
+    val strongestHands = descendingHands - descendingHands.filter { hand -> hand < firstHand }
 
-    val isTie = strongestHands.size == sortedHandMap.keys.size
+    val isTie = strongestHands.size == descendingHands.size
 
     val result: MutableMap<Player, Pair<Result, Hand>> = mutableMapOf()
     for (player in players) {
