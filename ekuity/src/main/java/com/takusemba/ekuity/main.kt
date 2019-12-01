@@ -2,6 +2,7 @@ package com.takusemba.ekuity
 
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.parameters.options.default
+import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.options.required
 import com.github.ajalt.clikt.parameters.options.split
@@ -10,6 +11,15 @@ import com.github.ajalt.clikt.parameters.types.int
 import com.jakewharton.picnic.BorderStyle
 import com.jakewharton.picnic.TextAlignment
 import com.jakewharton.picnic.table
+import com.takusemba.ekuity.Hand.Flush
+import com.takusemba.ekuity.Hand.FullHouse
+import com.takusemba.ekuity.Hand.HighCard
+import com.takusemba.ekuity.Hand.OnePair
+import com.takusemba.ekuity.Hand.Quads
+import com.takusemba.ekuity.Hand.Straight
+import com.takusemba.ekuity.Hand.StraightFlush
+import com.takusemba.ekuity.Hand.Trips
+import com.takusemba.ekuity.Hand.TwoPair
 import com.takusemba.ekuity.Result.LOSE
 import com.takusemba.ekuity.Result.TIE
 import com.takusemba.ekuity.Result.WIN
@@ -21,18 +31,21 @@ class Ekuity : CliktCommand() {
     versionOption("1.0.0")
   }
 
-  val players: List<String> by option("-p", "--player", "--players", help = "Sets players' cards")
+  val players: List<String> by option("-p", "--player", "--players", help = "Set players' cards")
     .split(Regex(","))
     .required()
 
-  val board: String? by option("-b", "--board", help = "Sets board's cards")
+  val board: String? by option("-b", "--board", help = "Set board's cards")
 
-  val exposed: List<String>? by option("-e", "--exposed", help = "Sets exposed cards")
+  val exposed: List<String>? by option("-e", "--exposed", help = "Set exposed cards")
     .split(Regex(","))
 
-  val iterations: Int by option("-i", "--iterations", help = "Sets iteration count")
+  val iterations: Int by option("-i", "--iterations", help = "Set iteration count")
     .int()
     .default(1000)
+
+  val verbose: Boolean by option("-v", "--verbose", help = "Show hand possibility detail")
+    .flag(default = false)
 
   override fun run() {
     val deck = Deck()
@@ -64,7 +77,7 @@ class Ekuity : CliktCommand() {
 
     echo("")
 
-    val table = table {
+    val result = table {
       style {
         borderStyle = BorderStyle.Hidden
       }
@@ -91,7 +104,114 @@ class Ekuity : CliktCommand() {
         }
       }
     }
-    echo(table.toString())
+    echo(result.toString())
+
+    if (verbose) {
+      val handPossibilities = table {
+        style {
+          borderStyle = BorderStyle.Hidden
+        }
+        cellStyle {
+          alignment = TextAlignment.MiddleCenter
+          paddingLeft = 1
+          paddingRight = 1
+          borderLeft = true
+          borderRight = true
+        }
+        header {
+          cellStyle {
+            border = true
+            alignment = TextAlignment.MiddleCenter
+          }
+          row("", *players.toTypedArray())
+        }
+        body {
+          row {
+            cell("high card") {
+              alignment = TextAlignment.MiddleLeft
+            }
+            for (player in history.keys) {
+              val handsHistory = history.getValue(player)
+              cell(handsHistory.filter { it.second is HighCard }.count() / iterations.toFloat())
+            }
+          }
+          row {
+            cell("one pair") {
+              alignment = TextAlignment.MiddleLeft
+            }
+            for (player in history.keys) {
+              val handsHistory = history.getValue(player)
+              cell(handsHistory.filter { it.second is OnePair }.count() / iterations.toFloat())
+            }
+          }
+          row {
+            cell("two pair") {
+              alignment = TextAlignment.MiddleLeft
+            }
+            for (player in history.keys) {
+              val handsHistory = history.getValue(player)
+              cell(handsHistory.filter { it.second is TwoPair }.count() / iterations.toFloat())
+            }
+          }
+          row {
+            cell("trips") {
+              alignment = TextAlignment.MiddleLeft
+            }
+            for (player in history.keys) {
+              val handsHistory = history.getValue(player)
+              cell(handsHistory.filter { it.second is Trips }.count() / iterations.toFloat())
+            }
+          }
+          row {
+            cell("straight") {
+              alignment = TextAlignment.MiddleLeft
+            }
+            for (player in history.keys) {
+              val handsHistory = history.getValue(player)
+              cell(handsHistory.filter { it.second is Straight }.count() / iterations.toFloat())
+            }
+          }
+          row {
+            cell("flush") {
+              alignment = TextAlignment.MiddleLeft
+            }
+            for (player in history.keys) {
+              val handsHistory = history.getValue(player)
+              cell(handsHistory.filter { it.second is Flush }.count() / iterations.toFloat())
+            }
+          }
+          row {
+            cell("full house") {
+              alignment = TextAlignment.MiddleLeft
+            }
+            for (player in history.keys) {
+              val handsHistory = history.getValue(player)
+              cell(handsHistory.filter { it.second is FullHouse }.count() / iterations.toFloat())
+            }
+          }
+          row {
+            cell("quads") {
+              alignment = TextAlignment.MiddleLeft
+            }
+            for (player in history.keys) {
+              val handsHistory = history.getValue(player)
+              cell(handsHistory.filter { it.second is Quads }.count() / iterations.toFloat())
+            }
+          }
+          row {
+            cell("straight flush") {
+              alignment = TextAlignment.MiddleLeft
+            }
+            for (player in history.keys) {
+              val handsHistory = history.getValue(player)
+              cell(handsHistory.filter { it.second is StraightFlush }.count() / iterations.toFloat())
+            }
+          }
+        }
+      }
+      echo(handPossibilities.toString())
+    }
+
     echo("$iterations iterations in $time ms")
   }
 }
