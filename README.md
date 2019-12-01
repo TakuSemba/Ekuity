@@ -2,7 +2,7 @@
 
 [![Actions Status](https://github.com/TakuSemba/Ekuity/workflows/CI/badge.svg)](https://github.com/TakuSemba/Ekuity/actions)
 
-A command-line tool for calculating **equity** with given players and borad.
+A command-line tool written in Kotlin for calculating **equity** with given players and borad.
 
 <p align="center"><img src="/art/demo.gif"/></p>
 
