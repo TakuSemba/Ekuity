@@ -25,10 +25,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Update Homebrew Tap
-      uses: izumin5210/action-homebrew-tap@v1.0.0
+      uses: mislav/bump-homebrew-formula-action@v1.4
       with:
         tap: takusemba/homebrew-ekuity
-        token: ${{ secrets.GITHUB_TOKEN }}
-        tap-token: ${{ secrets.GITHUB_TOKEN }}
-        commit-message: fomula file updated
+        homebrew-tap: TakuSemba/Ekuity
           
