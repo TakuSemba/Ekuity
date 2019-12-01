@@ -18,7 +18,7 @@ jobs:
         java-version: 1.8
     - name: Build with Gradle
       run: ./gradlew distTar distZip
-    - name: GH Release
+    - name: GitHub Release
       uses: softprops/action-gh-release@v0.1.0
       with:
         file: ekuity/build/distributions/*
