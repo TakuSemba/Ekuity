@@ -27,8 +27,7 @@ jobs:
     - name: Update Homebrew Tap
       uses: mislav/bump-homebrew-formula-action@v1.4
       with:
-        tap: takusemba/homebrew-ekuity
-        homebrew-tap: TakuSemba/Ekuity
+        homebrew-tap: takusemba/homebrew-ekuity
         formula-name: ekuity
       env:
         COMMITTER_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
