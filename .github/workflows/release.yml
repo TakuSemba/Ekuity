@@ -17,13 +17,11 @@ jobs:
       with:
         java-version: 1.8
     - name: Build with Gradle
-      run: ./gradlew distTar distZip
+      run: ./gradlew distZip
     - name: GitHub Release
       uses: softprops/action-gh-release@v0.1.4
       with:
-        file: |
-          ekuity/build/distributions/ekuity.tar
-          ekuity/build/distributions/ekuity.zip
+        file: '*.zip'
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Update Homebrew Tap
