@@ -1,6 +1,7 @@
 # Ekuity
 
 [![Actions Status](https://github.com/TakuSemba/Ekuity/workflows/Primary%20CI/badge.svg)](https://github.com/TakuSemba/Ekuity/actions)
+[![Actions Status](https://github.com/TakuSemba/Ekuity/workflows/Release%20CI/badge.svg)](https://github.com/TakuSemba/Ekuity/actions)
 
 A command-line tool written in Kotlin for calculating **equity** with given players and borad.
 
