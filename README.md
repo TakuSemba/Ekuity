@@ -12,7 +12,7 @@ coming soon.
 
 ## Usage
 
-These are the available options.
+These are available options.
 
 <p align="left"><img src="/art/usage.png" width="560px"/></p>
 
