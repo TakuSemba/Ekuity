@@ -16,9 +16,9 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 1.8
-    - uses: olegtarasov/get-tag@j1
-      id: tagName
     - name: Get Tag Name
+      uses: olegtarasov/get-tag@j1
+      id: tagName
       with:
         tagname: ${{ steps.tagName.outputs.tag }}
     - name: Build with Gradle
