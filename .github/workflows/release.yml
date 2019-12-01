@@ -27,11 +27,3 @@ jobs:
         files: ekuity/build/distributions/*
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    - name: Update Homebrew Tap
-      uses: mislav/bump-homebrew-formula-action@v1.4
-      with:
-        homebrew-tap: takusemba/homebrew-ekuity
-        formula-name: ekuity
-        download-url: https://github.com/TakuSemba/Ekuity/releases/download/${{ steps.tag_version.outputs.TAG_VERSION }}/ekuity.tar
-      env:
-        COMMITTER_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
