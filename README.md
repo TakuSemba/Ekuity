@@ -9,7 +9,11 @@ A command-line tool written in Kotlin for calculating **equity** with given play
 
 ## Installation
 
-coming soon.
+```sh
+brew install takusemba/ekuity/ekuity
+```
+
+Binary is downloadable from [releases](https://github.com/TakuSemba/Ekuity/releases)
 
 ## Usage
 
