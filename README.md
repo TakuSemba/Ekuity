@@ -15,6 +15,14 @@ brew install takusemba/ekuity/ekuity
 
 Binary is downloadable from [releases](https://github.com/TakuSemba/Ekuity/releases)
 
+## Locally
+
+You can run ekuity locally after cloning this repo.
+
+```sh
+./run ekuity --players AsKs,Ts8s --board 6sh8h5d
+```
+
 ## Usage
 
 These are available options.
